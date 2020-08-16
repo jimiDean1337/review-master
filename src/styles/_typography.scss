@@ -1,0 +1,27 @@
+// Import Fonts
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Open+Sans:400,500,700');
+
+// Import Icons
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Roboto', sans-serif;
+}
+
+p,
+span,
+button,
+li,
+a {
+  font-family: 'Open Sans', sans-serif;
+}
