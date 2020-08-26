@@ -1,50 +1,28 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { VisitorLayoutComponent } from './layouts/visitor-layout/visitor-layout.component';
-import { UserLayoutComponent } from './layouts/user-layout/user-layout.component';
-import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { UserAuthGuard } from './core/guards/user-auth.guard';
-import { AdminAuthGuard } from './core/guards/admin-auth.guard';
+
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
+import { VisitorComponent } from './visitor/visitor.component';
+import { AdminComponent } from './admin/admin.component';
+import { UserComponent } from './user/user.component';
+import { LoginComponent } from './pages/login/login.component';
+import { SignupComponent } from './pages/signup/signup.component';
+import { LocationsComponent } from './pages/locations/locations.component';
+import { ReviewComponent } from './pages/review/review.component';
+import { BizComponent } from './biz/biz.component';
+import { SignoutComponent } from './pages/signout/signout.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'welcome',
-    pathMatch: 'full'
-  },
-  {
-    path: 'welcome',
-    component: VisitorLayoutComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./layouts/visitor-layout/visitor-layout.module').then(m => m.VisitorLayoutModule)
-      }
-    ]
-  },
-  {
-    path: 'user/:userId',
-    component: UserLayoutComponent,
-    canActivate: [AngularFireAuthGuard],
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./layouts/user-layout/user-layout.module').then(m => m.UserLayoutModule)
-      }
-    ]
-  },
-  {
-    path: 'admin/:adminId',
-    component: AdminLayoutComponent,
-    canActivate: [AngularFireAuthGuard],
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
-      }
-    ]
-  }
+  { path: '', component: VisitorComponent, loadChildren: () => import('./visitor/visitor.module').then(m => m.VisitorModule) },
+  { path: 'admin', component: AdminComponent, canActivate: [AngularFireAuthGuard], loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  { path: 'user', component: UserComponent, canActivate: [AngularFireAuthGuard], loadChildren: () => import('./user/user.module').then(m => m.UserModule) },
+  {path: 'biz/:q', component: BizComponent},
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: 'seeyalater', component: SignoutComponent },
+  { path: 'locations', component: LocationsComponent },
+  { path: 'writeareview', component: ReviewComponent},
+  {path: 'welcome', redirectTo: '', pathMatch: 'full'}
 ];
 
 @NgModule({

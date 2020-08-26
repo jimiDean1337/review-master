@@ -7,8 +7,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { environment } from '../../environments/environment';
-import { UserAuthGuard } from './guards/user-auth.guard';
-import { AdminAuthGuard } from './guards/admin-auth.guard';
 
 
 @NgModule({
@@ -22,6 +20,6 @@ import { AdminAuthGuard } from './guards/admin-auth.guard';
     AngularFireStorageModule,
     AngularFireMessagingModule,
   ],
-  providers: [UserAuthGuard, AdminAuthGuard]
+  providers: []
 })
 export class CoreModule { }

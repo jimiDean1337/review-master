@@ -1,0 +1,16 @@
+<section class="jumbotron jumbotron-fluid w-100 text-center hero"
+  [style.background-image]="'url(assets/images/food_1.jpg)'" style="min-height: 600px; background-position: 0;">
+  <div class="container">
+    <!-- <h1 class="display-3"><a class="navbar-brand" href="#"><img src="assets/images/review-master-logo.png" width="300"
+        alt="Review Master Logo"></a></h1> -->
+    <div class="hero-content-wrapper" style="padding-top: 150px;">
+      <rm-business-search></rm-business-search>
+    </div>
+  </div>
+</section>
+
+<rm-suggestions [data]="suggestions"></rm-suggestions>
+
+<rm-locations-bar></rm-locations-bar>
+
+<rm-activity-feed></rm-activity-feed>

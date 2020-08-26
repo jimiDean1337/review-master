@@ -1,0 +1,26 @@
+.wrapper {
+  width: 100vw !important;
+  height: 100%;
+}
+
+.main-panel {
+  margin-top: 40px;
+
+  .content {
+    min-height: 100vh;
+  }
+}
+
+.hero {
+  min-height: 600px;
+  background-position: 0;
+
+  .hero-content-wrapper {
+    @media-breakpoint-up(me) {
+      padding: 12rem 2rem;
+
+    }
+
+  }
+}
+
