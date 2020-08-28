@@ -86,8 +86,7 @@ export class BusinessSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.googlePlacesService.init()
-
+    this.googlePlacesService.init();
   }
 
 
