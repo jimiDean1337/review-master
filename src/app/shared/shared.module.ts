@@ -20,12 +20,14 @@ import { BusinessSearchComponent } from './business-search/business-search.compo
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { LocationsBarComponent } from './locations-bar/locations-bar.component';
 import { ActivityFeedComponent } from './activity-feed/activity-feed.component';
+import { HovercardComponent } from './hovercard/hovercard.component';
+import { GaClickComponent } from './directives/ga-click/ga-click.component';
 
 
 
 
 @NgModule({
-  declarations: [SuggestionsComponent, BusinessSearchComponent, SafeHtmlPipe, LocationsBarComponent, ActivityFeedComponent],
+  declarations: [SuggestionsComponent, BusinessSearchComponent, SafeHtmlPipe, LocationsBarComponent, ActivityFeedComponent, HovercardComponent, GaClickComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -65,6 +67,8 @@ import { ActivityFeedComponent } from './activity-feed/activity-feed.component';
     SafeHtmlPipe,
     LocationsBarComponent,
     ActivityFeedComponent,
+    HovercardComponent,
+    GaClickComponent,
   ]
 })
 export class SharedModule { }

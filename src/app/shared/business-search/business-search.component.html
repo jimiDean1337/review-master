@@ -5,99 +5,52 @@
         <div class="input-group-prepend">
           <span class="input-group-text text-muted font-weight-bold">Find</span>
         </div>
-        <input type="text" name="businessSearchInput" id="businessSearchInput" aria-label="Business Search" class="form-control"
+        <input
+        autocomplete="off"
+        type="text"
+        class="form-control"
+        name="businessSearchInput"
+        id="businessSearchInput"
+        aria-label="Business Search"
+        [(ngModel)]="asyncSelectedCategory"
+        [typeaheadIsFirstItemActive]="false"
+        [typeahead]="categoriesDataSource$"
+        [typeaheadAsync]="true"
+        [typeaheadMinLength]="0"
+       [typeaheadOptionField]="'title'"
+       (typeaheadOnSelect)="selectAndSearch($event)"
+       (typeaheadLoading)="changeTypeaheadLoading($event)"
+       [typeaheadItemTemplate]="searchResultTemplate"
           placeholder="delivery, carryout, restaurant">
         <div class="input-group-prepend">
           <span class="input-group-text text-muted font-weight-bold">Near</span>
         </div>
-        <input type="text" name="locationSearchInput" id="locationSearchInput" aria-label="Location to search" class="form-control" placeholder="address, neighborhood, city, state or zip">
+        <input
+        autocomplete="off"
+        type="text"
+        class="form-control"
+        name="locationSearchInput"
+        id="locationSearchInput"
+        aria-label="Location to search"
+        [(ngModel)]="asyncSelectedLocation"
+        [typeahead]="locationsDataSource$"
+        [typeaheadAsync]="true"
+        [typeaheadMinLength]="1"
+       [typeaheadOptionField]="'name'"
+       (typeaheadOnSelect)="locationSelected($event)"
+       (typeaheadLoading)="changeTypeaheadLoading($event)"
+       placeholder="city, state or zip">
         <div class="input-group-append">
           <button class="btn btn-primary" type="button" id="searchBtn" style="width: 60px;"><i class="fas fa-search"></i></button>
         </div>
     </div>
-    <div class="suggestions-list-container">
-      <div class="main-search-suggestions search-results">
-        <ul class="list-group suggestions-list" role="listbox" aria-label="Search results">
-          <li role="option" tabindex="0" aria-label="category" class="list-group-item">
-            <div class="media-block">
-              <div class="media-avatar">
-                <i class="fas fa-utensils"></i>
-              </div>
-              <div class="media-story">
-                <span class="suggestion-detail suggestion-title suggestion-name">Restaurant</span>
-              </div>
-            </div>
-          </li>
-          <li role="option" tabindex="0" aria-label="category" class="list-group-item">
-            <div class="media-block">
-              <div class="media-avatar">
-                <i class="fas fa-bicycle"></i>
-              </div>
-              <div class="media-story">
-                <span class="suggestion-detail suggestion-title suggestion-name">Delivery</span>
-              </div>
-            </div>
-          </li>
-          <li role="option" tabindex="0" aria-label="category" class="list-group-item">
-            <div class="media-block">
-              <div class="media-avatar">
-                <i class="fas fa-shopping-bag"></i>
-              </div>
-              <div class="media-story">
-                <span class="suggestion-detail suggestion-title suggestion-name">Takeout</span>
-              </div>
-            </div>
-          </li>
-          <li role="option" tabindex="0" aria-label="category" class="list-group-item">
-            <div class="media-block">
-              <div class="media-avatar">
-                <i class="fas fa-calculator"></i>
-              </div>
-              <div class="media-story">
-                <span class="suggestion-detail suggestion-title suggestion-name">Accountants</span>
-              </div>
-            </div>
-          </li>
-          <li role="option" tabindex="0" aria-label="category" class="list-group-item">
-            <div class="media-block">
-              <div class="media-avatar">
-                <i class="fas fa-toolbox"></i>
-              </div>
-              <div class="media-story">
-                <span class="suggestion-detail suggestion-title suggestion-name">Plumbers</span>
-              </div>
-            </div>
-          </li>
-          <li role="option" tabindex="0" aria-label="category" class="list-group-item">
-            <div class="media-block">
-              <div class="media-avatar">
-
-                <i class="fas fa-wrench"></i>
-              </div>
-              <div class="media-story">
-                <span class="suggestion-detail suggestion-title suggestion-name">Auto Repair</span>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="locations-list-container">
-        <div class="main-search-suggestions location-results">
-          <ul class="list-group suggestions-list" role="listbox" aria-label="Search results">
-            <li role="option" tabindex="0" aria-label="category" class="list-group-item">
-              <div class="media-block">
-                <div class="media-avatar">
-                  <i class="fas fa-utensils"></i>
-                </div>
-                <div class="media-story">
-                  <span class="suggestion-detail suggestion-title suggestion-name">Restaurant</span>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-    </div>
+    <ng-template #searchResultTemplate let-model="item" let-index="index">
+      <span class="mr-2">
+        <i class="fas" [ngClass]="model.icon"></i>
+      </span>
+      <span>{{model.title}}</span>
+    </ng-template>
+    <div id="map"></div>
   </form>
   <div class="btn-group mt-md-3" role="group" aria-label="">
     <button type="button" class="btn btn-link text-white"><i class="fas fa-hammer"></i> Construction</button>

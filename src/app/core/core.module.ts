@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
@@ -12,7 +12,7 @@ import { environment } from '../../environments/environment';
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
+    HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFireAnalyticsModule,
