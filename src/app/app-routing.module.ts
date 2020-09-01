@@ -11,6 +11,8 @@ import { LocationsComponent } from './pages/locations/locations.component';
 import { ReviewComponent } from './pages/review/review.component';
 import { BizComponent } from './biz/biz.component';
 import { SignoutComponent } from './pages/signout/signout.component';
+import { CategoriesComponent } from './pages/categories/categories.component';
+import { SearchComponent } from './search/search.component';
 
 const routes: Routes = [
   { path: '', component: VisitorComponent, loadChildren: () => import('./visitor/visitor.module').then(m => m.VisitorModule) },
@@ -21,7 +23,9 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'seeyalater', component: SignoutComponent },
   { path: 'locations', component: LocationsComponent },
-  { path: 'writeareview', component: ReviewComponent},
+  { path: 'categories', component: CategoriesComponent },
+  { path: 'writeareview', component: ReviewComponent },
+  { path: 'search', component: SearchComponent, loadChildren: () => import('./search/search.module').then(m => m.SearchModule)},
   {path: 'welcome', redirectTo: '', pathMatch: 'full'}
 ];
 

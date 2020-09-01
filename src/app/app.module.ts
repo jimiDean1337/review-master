@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { AgmCoreModule } from '@agm/core';
+import { CookieService } from 'ngx-cookie-service';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { FooterModule } from './footer/footer.module';
@@ -17,6 +17,8 @@ import { ReviewComponent } from './pages/review/review.component';
 import { LocationsComponent } from './pages/locations/locations.component';
 import { BizModule } from './biz/biz.module';
 import { SignoutComponent } from './pages/signout/signout.component';
+import { CategoriesComponent } from './pages/categories/categories.component';
+import { SearchModule } from './search/search.module';
 
 
 @NgModule({
@@ -27,23 +29,21 @@ import { SignoutComponent } from './pages/signout/signout.component';
     ReviewComponent,
     LocationsComponent,
     SignoutComponent,
+    CategoriesComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAP9hhmeOGwMrCGNjor-KvDsPdu8cj2Zz4',
-      libraries: ['places']
-    }),
     CoreModule,
     FooterModule,
     NavbarModule,
     SidebarModule,
-    AppRoutingModule,
     VisitorModule,
     SharedModule,
     UserModule,
     BizModule,
+    AppRoutingModule,
+    SearchModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

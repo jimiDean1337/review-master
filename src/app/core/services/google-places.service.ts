@@ -1,80 +1,94 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { extend } from 'jquery';
+import { AutocompletePrediction, QueryAutocompletePrediction, AutocompleteRequest, QueryAutocompleteRequest } from '../models/search.interface';
+import { Observable, of, interval} from 'rxjs';
+import { tap } from 'rxjs/operators';
 
-export interface PlacesRequest {
-  location?: google.maps.LatLng;
-  radius?: number;
-  type?: string[];
-  query?: string | string[];
-  fields?: string | string;
-}
+
 @Injectable({
   providedIn: 'root'
 })
 export class GooglePlacesService {
   // apiKey = 'AIzaSyAP9hhmeOGwMrCGNjor-KvDsPdu8cj2Zz4';
   places = google.maps.places;
-  requestStatus = google.maps.places.PlacesServiceStatus;
   geolocation = {
-    lng: null,
+    hasLocation: false,
     lat: null,
-    rad: null
+    lng: null,
+    accuracy: null,
   }
-  config = {
-    map: null,
-    service: null,
-    infowindow: null,
-    home: null,
-  };
 
-  currentRequest: PlacesRequest = null;
-  defaults = {
-    zoom: 15,
-  };
-  query: string;
+  searchResults$: Observable<any>;
 
-  constructor(private http: HttpClient) { }
+  public results = [];
+  constructor() {
+
+  }
 
   init() {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      console.log("GooglePlacesService -> getGeolocation -> position", pos)
-      this.config.home = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-      this.geolocation.lat = pos.coords.latitude;
-      this.geolocation.lng = pos.coords.longitude;
-      this.geolocation.rad = 100;
-      this.config.infowindow = new google.maps.InfoWindow();
-      this.config.map = new google.maps.Map(document.getElementById('map'), { center: this.config.home, zoom: this.defaults.zoom });
-    }, err => alert('ERROR: The Geolocation Service Failed!'), { enableHighAccuracy: true });
-    // extend(true, this.config, config, this.defaults);
-    // console.log("GooglePlacesService -> init -> this.config", this.config)
-
+    this.setGeolocation();
+    setInterval(() => {
+      this.setGeolocation();
+    }, 10000)
   }
 
-  setHome(lat, lng) {
-    this.config.home = new google.maps.LatLng(lat, lng);
+  private setGeolocation() {
+      navigator.geolocation.getCurrentPosition(pos => {
+      // console.log("GooglePlacesService -> init -> pos", pos)
+        this.geolocation = {
+          hasLocation: true,
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: pos.coords.accuracy
+        };
+      }, err => {
+          this.geolocation.hasLocation = false;
+        alert('ERROR: The Geolocation Service Failed!')
+      },
+        { enableHighAccuracy: true }
+      )
   }
-
-  autocomplete() {}
-
-  getDetails() { }
-
-  getPhoto() {}
-
-  queryAutocomplete() {}
-
-  nearby(request: PlacesRequest) {
-    this.config.service.nearbySearch(request, (results, status) => {
-      this.requestStatus = google.maps.places.PlacesServiceStatus;
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (let i = 0; i < results.length; i++) {
-          console.log("GooglePlacesService -> getGeolocation -> results[i]", results[i])
+  autocomplete(input: string, local?: any): Observable<any> {
+    let location;
+    if (!local) {
+      location = this.geolocation.hasLocation ? new google.maps.LatLng(this.geolocation.lat, this.geolocation.lng) : null;
+    } else {
+      location = new google.maps.LatLng(local.lat, local.lng)
+    }
+    return Observable.create((obs: any) => {
+      new google.maps.places.AutocompleteService().getQueryPredictions({ input, location, radius: 15000 }, (predictions: QueryAutocompletePrediction[], status) => {
+      console.log("GooglePlacesService -> predictions", predictions)
+        if (status != google.maps.places.PlacesServiceStatus.OK) {
+          alert(status);
+          obs.next([{ description: 'Failed to get current location', icon: 'fa-warning' }]);
         }
-      }
+        obs.next(predictions);
+      });
     })
   }
 
+  getLocationByLatLng(lat, lng) {
+    const geocoder = new google.maps.Geocoder;
+    geocoder.geocode({ 'location': { lat, lng } }, (results, status) => {
+    console.log("getLocationByLatLng -> results", results)
+    })
+  }
+
+  getDetails() {}
+
+  getPhoto() {}
+
+  public queryAutocomplete(input: string): Observable<any> {
+    return Observable.create((obs: any) => {
+      new google.maps.places.AutocompleteService().getPlacePredictions({ input }, (predictions: QueryAutocompletePrediction[], status) => {
+        if (status != google.maps.places.PlacesServiceStatus.OK) {
+          alert(status);
+          obs.next([{description:'Failed to get current location', icon: 'fa-warning'}]);
+        }
+        obs.next(predictions);
+      });
+
+    })
+  }
   findPlaceFromText() {}
 
 

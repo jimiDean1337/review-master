@@ -17,6 +17,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "firebase",
+              "@firebase/app",
+              "firebase/app",
+              "@firebase/auth",
+              "@firebase/storage",
+              "@firebase/messaging",
+              "@firebase/analytics",
+              "@firebase/firestore",
+              "@firebase/functions"
+            ],
             "crossOrigin": "anonymous",
             "outputPath": "dist",
             "index": "src/index.html",

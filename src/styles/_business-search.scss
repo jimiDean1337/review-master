@@ -1,5 +1,6 @@
 #businessSearchGroup {
   width: 960px;
+
   input {
     // min-width: 28.4rem !important;
     border-left: none !important;
@@ -23,12 +24,36 @@
   .dropdown-menu {
     min-width: 450px !important;
     margin: -.125rem 0 0 -78px !important;
+
     button:first-of-type {
       border-radius: 0;
     }
+
     button {
       padding: 0.25rem 1rem !important;
     }
   }
-}
 
+  .custom-list-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .custom-list-group-item {
+    position: relative;
+    display: block;
+    padding: .75rem 1.25rem;
+    background-color: $white;
+  }
+
+  .custom-list-group-item.active {
+    z-index: 2;
+    color: $white;
+    background-color: $primary;
+    border-color: $primary;
+  }
+}

@@ -1,18 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { SearchService } from '../../core/services/search.service';
-import { GooglePlacesService } from '../../core/services/google-places.service';
-import { TypeaheadConfig } from 'ngx-bootstrap/typeahead';
-import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
-import { mergeMap, delay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { STATES } from './mock.data';
-import { SEARCH_CATEGORIES } from './categories.data';
+import { mergeMap, delay, switchMap } from 'rxjs/operators';
+// import { TypeaheadConfig } from 'ngx-bootstrap/typeahead';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
+import { CookieService } from 'ngx-cookie-service';
+import { GooglePlacesService } from '../../core/services/google-places.service';
+import { SearchService } from '../../core/services/search.service';
 
-export interface SearchConfig {
-  title?: string;
-  showIcons?: boolean;
-  [key: string]: any;
-}
+import { SEARCH_CATEGORIES, SEARCH_CATEGORY_TYPES, ADDITIONAL_CATEGORIES, ALL_CATEGORIES } from '../../core/mocks/categories';
+import { BusinessSearchComponentConfig } from '../../core/models/search.interface';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'rm-business-search',
@@ -20,69 +17,112 @@ export interface SearchConfig {
   styleUrls: ['./business-search.component.scss']
 })
 export class BusinessSearchComponent implements OnInit {
-  @Input() config?: SearchConfig = {
+  @Input() config?: BusinessSearchComponentConfig = {
     title: 'Find what you\'re looking for',
     showIcons: true
   };
 
-  asyncSelectedLocation: string;
-  asyncSelectedCategory: string;
+  asyncLocation: string;
+  previousSelectedLocation = {
+    desription: 'Newark, OH, USA',
+    place_id: 'ChIJfRGAsNkXOIgRHJm04TVsYRE'
+  };
+  asyncCategory: string;
+  previousSelectedCategory = {
+    title: 'Restaurants'
+  }
   typeaheadLoading: boolean;
   typeaheadNoResults: boolean;
   locationsDataSource$: Observable<any>;
   categoriesDataSource$: Observable<any>;
-  locations = STATES;
+  initLocations = [
+    {
+      description: 'Current Location',
+      type: 'current_location',
+      icon: 'fa-location-arrow'
+    },
+    {
+      description: this.previousSelectedLocation.desription,
+      icon: 'fa-clock'
+    }
+  ];
   categories = SEARCH_CATEGORIES;
-  geolocation: any;
-  selectedLocation: TypeaheadMatch;
-  selectedCategory: TypeaheadMatch;
-  constructor(private searchService: SearchService, private googlePlacesService: GooglePlacesService) {
+  categoryTypes = SEARCH_CATEGORY_TYPES;
+  additionalCategories = ADDITIONAL_CATEGORIES;
+  allCategories = ALL_CATEGORIES;
+  selectedLocation: any;
+  selectedCategory: any;
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private googlePlacesService: GooglePlacesService,
+    private cookie: CookieService) {
+    // Get autocomplete location results on input
     this.locationsDataSource$ = Observable.create((observer: any) => {
-      // Runs on every search
-      observer.next(this.asyncSelectedLocation);
+      observer.next(this.asyncLocation);
     })
       .pipe(
         mergeMap((token: string) => {
-        console.log("BusinessSearchComponent -> location token -> token", token)
-          return this.getDataAsObservable('location', token, 'name', this.locations)
+          if (!token) {
+          return of(this.initLocations)
+          }
+          return this.searchLocation(token);
         }),
         delay(500)
     );
+    // Get autocomplete category results on input
     this.categoriesDataSource$ = Observable.create((observer: any) => {
-      // Runs on every search
-      observer.next(this.asyncSelectedCategory);
+      observer.next(this.asyncCategory);
     })
     .pipe(
-      mergeMap((token: string) => this.getDataAsObservable('category', token, 'title', this.categories)),
+      mergeMap((token: string) => {
+        if (!token) {
+          return of(this.categories);
+        }
+        return this.searchCategory(token);
+      }),
+      delay(500)
       );
     }
-  private search(q: string, location?: any) {
-    this.searchService.search(q, location);
+  private searchLocation(q: string) {
+    return this.googlePlacesService.queryAutocomplete(q)
   }
 
-  getDataAsObservable(type: 'category'|'location', token: string, prop: string, data: any): Observable<any> {
-    const query = new RegExp(token, 'i');
-    return of(
-      data.filter((key: any) => {
-      console.log("BusinessSearchComponent -> key", key)
-        // this[type] = key;
-        return query.test(key[prop]);
-      })
-    );
+
+  setCurrentLocation() {
+
+  }
+
+  searchCategory(q: string): Observable<any> {
+      const query = new RegExp(q, 'i');
+      return of(
+        this.allCategories.filter((key: any) => {
+          return query.test(key.description);
+        })
+        );
+
+  }
+
+  navigateTo(url: any, queryParams: any) {
+    this.router.navigate([`/${url}`], {queryParams})
   }
 
   changeTypeaheadLoading(e: boolean): void {
     this.typeaheadLoading = e;
   }
 
-  selectAndSearch(e: TypeaheadMatch) {
+  selectAndNavigate(e: TypeaheadMatch) {
     this.selectedCategory = e;
-    console.log("BusinessSearchComponent -> selectInput -> e", e)
+    this.navigateTo('search', {find_desc: e.item.search_term})
+    console.log("Selected category match", e)
   }
 
   locationSelected(e: TypeaheadMatch): void {
-    this.selectedLocation = e;
-    console.log('Selected value: ', e);
+    // if (e.item.type && e.item.type === 'current_location') {
+    //   this.googlePlacesService.
+    // }
+    this.selectedLocation = e.item.description;
+    console.log('Selected location match: ', e);
   }
 
   ngOnInit(): void {

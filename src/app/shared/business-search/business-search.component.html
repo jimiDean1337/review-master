@@ -12,15 +12,15 @@
         name="businessSearchInput"
         id="businessSearchInput"
         aria-label="Business Search"
-        [(ngModel)]="asyncSelectedCategory"
+        [(ngModel)]="asyncCategory"
         [typeaheadIsFirstItemActive]="false"
         [typeahead]="categoriesDataSource$"
         [typeaheadAsync]="true"
         [typeaheadMinLength]="0"
-       [typeaheadOptionField]="'title'"
-       (typeaheadOnSelect)="selectAndSearch($event)"
+       [typeaheadOptionField]="'description'"
+       (typeaheadOnSelect)="selectAndNavigate($event)"
        (typeaheadLoading)="changeTypeaheadLoading($event)"
-       [typeaheadItemTemplate]="searchResultTemplate"
+       [typeaheadItemTemplate]="resultTemplate"
           placeholder="delivery, carryout, restaurant">
         <div class="input-group-prepend">
           <span class="input-group-text text-muted font-weight-bold">Near</span>
@@ -32,24 +32,31 @@
         name="locationSearchInput"
         id="locationSearchInput"
         aria-label="Location to search"
-        [(ngModel)]="asyncSelectedLocation"
+        [(ngModel)]="asyncLocation"
         [typeahead]="locationsDataSource$"
         [typeaheadAsync]="true"
-        [typeaheadMinLength]="1"
-       [typeaheadOptionField]="'name'"
+        [typeaheadMinLength]="0"
+       [typeaheadOptionField]="'description'"
        (typeaheadOnSelect)="locationSelected($event)"
        (typeaheadLoading)="changeTypeaheadLoading($event)"
+       [typeaheadItemTemplate]="resultTemplate"
        placeholder="city, state or zip">
         <div class="input-group-append">
           <button class="btn btn-primary" type="button" id="searchBtn" style="width: 60px;"><i class="fas fa-search"></i></button>
         </div>
     </div>
-    <ng-template #searchResultTemplate let-model="item" let-index="index">
-      <span class="mr-2">
+    <ng-template #resultTemplate let-model="item" let-index="index">
+      <span class="mr-2" *ngIf="model.icon">
         <i class="fas" [ngClass]="model.icon"></i>
       </span>
-      <span>{{model.title}}</span>
+      <span>{{model.description}}</span>
     </ng-template>
+    <!-- <ng-template #categoryResultTemplate let-model="item" let-index="index">
+      <span class="mr-2" *ngIf="model.icon">
+        <i class="fas" [ngClass]="model.icon"></i>
+      </span>
+      <span>{{model.description}}</span>
+    </ng-template> -->
     <div id="map"></div>
   </form>
   <div class="btn-group mt-md-3" role="group" aria-label="">
