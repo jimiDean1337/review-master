@@ -1,4 +1,4 @@
-#businessSearchGroup {
+#businessSearchBarGroup {
   width: 960px;
 
   input {
@@ -34,26 +34,8 @@
     }
   }
 
-  .custom-list-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding-left: 0;
-    margin: 0;
-    list-style: none;
-  }
+}
 
-  .custom-list-group-item {
-    position: relative;
-    display: block;
-    padding: .75rem 1.25rem;
-    background-color: $white;
-  }
-
-  .custom-list-group-item.active {
-    z-index: 2;
-    color: $white;
-    background-color: $primary;
-    border-color: $primary;
-  }
+#biz-search-more-btn.dropdown-toggle::after {
+  display: none !important;
 }

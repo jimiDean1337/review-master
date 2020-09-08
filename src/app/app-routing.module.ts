@@ -25,7 +25,6 @@ const routes: Routes = [
   { path: 'locations', component: LocationsComponent },
   { path: 'categories', component: CategoriesComponent },
   { path: 'writeareview', component: ReviewComponent },
-  { path: 'search', component: SearchComponent, loadChildren: () => import('./search/search.module').then(m => m.SearchModule)},
   {path: 'welcome', redirectTo: '', pathMatch: 'full'}
 ];
 

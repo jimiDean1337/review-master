@@ -7,19 +7,6 @@ import { of } from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
-  searchTerms = [];
-
-  request = {}
-
   constructor(private googlePlacesService: GooglePlacesService) {
-  }
-
-  init() {
-    this.googlePlacesService.init();
-  }
-
-
-  search(query: any) {
-    return this.googlePlacesService.queryAutocomplete(query);
   }
 }

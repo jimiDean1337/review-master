@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="row my-3">
+    <div class="col-md-9">
+      <h3 class="">{{searchCategoryFormatted$ |async}} in {{searchLocationFormatted$ |async}}</h3>
+    </div>
+    <div class="col-md-3">
+      <div class="results-sort-type-btn-group btn-group" dropdown>
+        <button id="button-animated" dropdownToggle type="button" class="btn btn-link dropdown-toggle text-dark"
+          aria-controls="dropdown-animated">
+          Sort: <b>Recommended</b> <span class="caret"></span>
+        </button>
+        <div *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
+          <button type="button" class="btn btn-link">
+            <span class=""><i class="fas fa-thumbs-up"></i></span>
+            <span class=""> &nbsp;Recommended</span>
+          </button>
+          <button type="button" class="btn btn-link">
+            <span class=""><i class="fas fa-star"></i></span>
+            <span class=""> &nbsp;Highest Rated</span>
+          </button>
+          <button type="button" class="btn btn-link">
+            <span class=""><i class="fas fa-eye"></i></span>
+            <span class=""> &nbsp;Most Viewed</span>
+          </button>
+        </div>
+        <!-- <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
+          <li role="menuitem"><span class="p-3 text-center">Recommended</span></li>
+          <li role="menuitem"><span class="p-3 text-center">Highest Rated</span></li>
+          <li role="menuitem"><span class="p-3 text-center">Most Viewed</span></li>
+
+        </ul> -->
+      </div>
+    </div>
+  </div>
+</div>

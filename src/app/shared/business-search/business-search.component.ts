@@ -1,15 +1,24 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { mergeMap, delay, switchMap } from 'rxjs/operators';
+import { mergeMap, map } from 'rxjs/operators';
 // import { TypeaheadConfig } from 'ngx-bootstrap/typeahead';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
-import { CookieService } from 'ngx-cookie-service';
-import { GooglePlacesService } from '../../core/services/google-places.service';
-import { SearchService } from '../../core/services/search.service';
+import { CookiesService } from '../../core/services/cookies.service';
+import { GooglePlacesService, UserGeolocation, TargetSearchLocationData } from '../../core/services/google-places.service';
 
-import { SEARCH_CATEGORIES, SEARCH_CATEGORY_TYPES, ADDITIONAL_CATEGORIES, ALL_CATEGORIES } from '../../core/mocks/categories';
+import { SEARCH_CATEGORIES, ALL_CATEGORIES } from '../../core/mocks/categories';
 import { BusinessSearchComponentConfig } from '../../core/models/search.interface';
 import { Router, ActivatedRoute } from '@angular/router';
+
+export interface SelectedItem {
+  [key: string]: any;
+  description?: string;
+  types?: any;
+  type?: any;
+  icon?: string;
+  id?: string;
+  value?: any;
+}
 
 @Component({
   selector: 'rm-business-search',
@@ -19,44 +28,54 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class BusinessSearchComponent implements OnInit {
   @Input() config?: BusinessSearchComponentConfig = {
     title: 'Find what you\'re looking for',
-    showIcons: true
+    showIcons: true,
   };
 
+  @Input() isHeroSearch: boolean = false;
+
+  @Output() newSearchCriteraSet: EventEmitter<any> = new EventEmitter(true);
+
+  location$: Observable<UserGeolocation>;
   asyncLocation: string;
-  previousSelectedLocation = {
-    desription: 'Newark, OH, USA',
-    place_id: 'ChIJfRGAsNkXOIgRHJm04TVsYRE'
+  previousSelectedLocation: SelectedItem = {
+    description: '',
+    types: [],
+    value: '',
+    id: '',
   };
   asyncCategory: string;
-  previousSelectedCategory = {
-    title: 'Restaurants'
+  previousSelectedCategory: SelectedItem = {
+    description: '',
+    types: [],
+    search_term: '',
+    value: '',
+    id: '',
   }
   typeaheadLoading: boolean;
   typeaheadNoResults: boolean;
   locationsDataSource$: Observable<any>;
   categoriesDataSource$: Observable<any>;
-  initLocations = [
-    {
-      description: 'Current Location',
-      type: 'current_location',
-      icon: 'fa-location-arrow'
-    },
-    {
-      description: this.previousSelectedLocation.desription,
-      icon: 'fa-clock'
-    }
-  ];
+  initLocations: any;
   categories = SEARCH_CATEGORIES;
-  categoryTypes = SEARCH_CATEGORY_TYPES;
-  additionalCategories = ADDITIONAL_CATEGORIES;
   allCategories = ALL_CATEGORIES;
-  selectedLocation: any;
-  selectedCategory: any;
+  selectedLocation: SelectedItem = {
+    description: '',
+    types: [],
+    value: '',
+    id: '',
+  };
+  selectedCategory: SelectedItem = {
+    description: '',
+    value: '',
+    search_term: '',
+    id: '',
+  };
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private googlePlacesService: GooglePlacesService,
-    private cookie: CookieService) {
+    private cookie: CookiesService) {
     // Get autocomplete location results on input
     this.locationsDataSource$ = Observable.create((observer: any) => {
       observer.next(this.asyncLocation);
@@ -67,25 +86,23 @@ export class BusinessSearchComponent implements OnInit {
           return of(this.initLocations)
           }
           return this.searchLocation(token);
-        }),
-        delay(500)
+        })
     );
     // Get autocomplete category results on input
     this.categoriesDataSource$ = Observable.create((observer: any) => {
       observer.next(this.asyncCategory);
     })
-    .pipe(
-      mergeMap((token: string) => {
-        if (!token) {
-          return of(this.categories);
-        }
-        return this.searchCategory(token);
-      }),
-      delay(500)
-      );
+      .pipe(
+        mergeMap((token: string) => {
+          if (!token) {
+            return of(this.categories);
+          }
+          return this.searchCategory(token);
+        })
+    );
     }
   private searchLocation(q: string) {
-    return this.googlePlacesService.queryAutocomplete(q)
+    return this.googlePlacesService.getPlacePredictions(q)
   }
 
 
@@ -104,29 +121,102 @@ export class BusinessSearchComponent implements OnInit {
   }
 
   navigateTo(url: any, queryParams: any) {
-    this.router.navigate([`/${url}`], {queryParams})
+    return this.router.navigate([`/${url}`], { queryParams });
   }
 
   changeTypeaheadLoading(e: boolean): void {
     this.typeaheadLoading = e;
   }
 
-  selectAndNavigate(e: TypeaheadMatch) {
-    this.selectedCategory = e;
-    this.navigateTo('search', {find_desc: e.item.search_term})
-    console.log("Selected category match", e)
+  selectAndSearch(e: TypeaheadMatch, isHeroSearch = false) {
+    console.log("BusinessSearchComponent -> selectAndNavigate -> e", e)
+    this.selectedCategory = e.item;
+    if (!this.selectedLocation.description) {
+      this.selectedLocation = this.previousSelectedLocation;
+    }
+    if (isHeroSearch) {
+      this.navigateTo('search', { find_desc: e.item.search_term, find_loc: this.selectedLocation.id }).then(res => {
+      console.log("BusinessSearchComponent -> selectAndNavigate -> res", res)
+        this.cookie.add('previous_location', JSON.stringify(this.previousSelectedLocation));
+      })
+    }
+    // console.log("Selected category match", e, this.selectedLocation);
   }
 
   locationSelected(e: TypeaheadMatch): void {
-    // if (e.item.type && e.item.type === 'current_location') {
-    //   this.googlePlacesService.
-    // }
-    this.selectedLocation = e.item.description;
-    console.log('Selected location match: ', e);
+    // console.log("BusinessSearchComponent -> locationSelected -> e", e)
+    let types = e.item.types;
+    let value = e.item.description;
+    let locationData: TargetSearchLocationData;
+    this.location$.subscribe((results: UserGeolocation) => {
+    if (types.includes('current_location')) {
+      console.log("BusinessSearchComponent -> locationSelected -> results", results)
+        results.geocoder$().subscribe((local: google.maps.GeocoderResult) => {
+        // console.log("BusinessSearchComponent -> locationSelected -> local", results, local)
+          this.selectedLocation.value = local.formatted_address;
+          this.selectedLocation.types = local.types;
+          this.selectedLocation.id = local.place_id;
+          this.selectedLocation.description = local.formatted_address;
+          this.previousSelectedLocation.value = local.formatted_address;
+          this.previousSelectedLocation.types = ['previous_selection', ...local.types];
+          this.previousSelectedLocation.id = local.place_id;
+          this.previousSelectedLocation.description = local.formatted_address;
+          locationData = {
+            place_id: local.place_id,
+            formatted_address: local.formatted_address,
+            userGeolocation: results,
+            types: local.types
+          }
+          // this.cookie.add('previous_location', JSON.stringify(this.previousSelectedLocation));
+        })
+      } else {
+        this.selectedLocation.value = value;
+        this.selectedLocation.description = value;
+        this.selectedLocation.id = e.item.place_id;
+        this.selectedLocation.types = e.item.types;
+        this.previousSelectedLocation.value = value;
+        this.previousSelectedLocation.description = value;
+        this.previousSelectedLocation.id = e.item.place_id;
+        this.previousSelectedLocation.types = e.item.types;
+        locationData = {
+          place_id: e.item.place_id,
+          formatted_address: e.item.value,
+          userGeolocation: results,
+          types: e.item.types
+        }
+        // this.cookie.add('previous_location', JSON.stringify(this.previousSelectedLocation));
+      }
+      this.googlePlacesService.setTargetLocationData(locationData);
+    })
+      // TODO: create object props of selected location data
+    // TODO: selectedLocation props: place_id, formatted_address, types, current user location
+    // TODO: previouslySelectedLocation props: place_id, formatted_address, types
   }
 
+
   ngOnInit(): void {
-    this.googlePlacesService.init();
+    this.previousSelectedLocation = this.cookie.get('previous_location') || {
+      description: '',
+      types: [],
+      value: '',
+      id: '',
+  };
+    this.initLocations = [
+      {
+        description: 'Current Location',
+        types: ['current_location'],
+        value: '',
+        id: '',
+        icon: 'fa-location-arrow',
+      },
+      {
+        icon: 'fa-clock',
+        ...this.previousSelectedLocation
+      }
+    ];
+    const mapContainer: any = document.getElementById('map');
+    this.googlePlacesService.init(mapContainer);
+    this.location$ = this.googlePlacesService.getLocationStream();
   }
 
 

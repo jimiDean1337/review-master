@@ -1,11 +1,24 @@
+// Style variables
 @import 'variables';
+
+// 3rd-party
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~bootstrap/scss/variables.scss';
+
+// Font and typography styles
 @import 'typography';
+
+// Custom style defaults
 @import 'defaults';
+
+// Review Master theme
 @import 'theme';
+
+// Styles Components
 @import 'navbar';
 @import 'login';
 @import 'signup';
-@import 'business-search';
+@import 'business-search-bar';
+@import 'search';
 @import 'footer';
+

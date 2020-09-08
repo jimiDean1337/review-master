@@ -1,69 +1,88 @@
 <div class="container">
   <!-- <p class="lead pt-5 text-white">{{config.title}}</p> -->
-  <form name="businessSearchForm">
-    <div class="input-group input-group-lg" id="businessSearchGroup">
-        <div class="input-group-prepend">
-          <span class="input-group-text text-muted font-weight-bold">Find</span>
-        </div>
-        <input
-        autocomplete="off"
-        type="text"
-        class="form-control"
-        name="businessSearchInput"
-        id="businessSearchInput"
-        aria-label="Business Search"
-        [(ngModel)]="asyncCategory"
-        [typeaheadIsFirstItemActive]="false"
-        [typeahead]="categoriesDataSource$"
-        [typeaheadAsync]="true"
-        [typeaheadMinLength]="0"
-       [typeaheadOptionField]="'description'"
-       (typeaheadOnSelect)="selectAndNavigate($event)"
-       (typeaheadLoading)="changeTypeaheadLoading($event)"
-       [typeaheadItemTemplate]="resultTemplate"
-          placeholder="delivery, carryout, restaurant">
-        <div class="input-group-prepend">
-          <span class="input-group-text text-muted font-weight-bold">Near</span>
-        </div>
-        <input
-        autocomplete="off"
-        type="text"
-        class="form-control"
-        name="locationSearchInput"
-        id="locationSearchInput"
-        aria-label="Location to search"
-        [(ngModel)]="asyncLocation"
-        [typeahead]="locationsDataSource$"
-        [typeaheadAsync]="true"
-        [typeaheadMinLength]="0"
-       [typeaheadOptionField]="'description'"
-       (typeaheadOnSelect)="locationSelected($event)"
-       (typeaheadLoading)="changeTypeaheadLoading($event)"
-       [typeaheadItemTemplate]="resultTemplate"
-       placeholder="city, state or zip">
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="button" id="searchBtn" style="width: 60px;"><i class="fas fa-search"></i></button>
-        </div>
-    </div>
-    <ng-template #resultTemplate let-model="item" let-index="index">
-      <span class="mr-2" *ngIf="model.icon">
-        <i class="fas" [ngClass]="model.icon"></i>
-      </span>
-      <span>{{model.description}}</span>
-    </ng-template>
-    <!-- <ng-template #categoryResultTemplate let-model="item" let-index="index">
-      <span class="mr-2" *ngIf="model.icon">
-        <i class="fas" [ngClass]="model.icon"></i>
-      </span>
-      <span>{{model.description}}</span>
-    </ng-template> -->
-    <div id="map"></div>
-  </form>
-  <div class="btn-group mt-md-3" role="group" aria-label="">
-    <button type="button" class="btn btn-link text-white"><i class="fas fa-hammer"></i> Construction</button>
-    <button type="button" class="btn btn-link text-white"><i class="fas fa-utensils"></i> Restaurants</button>
-    <button type="button" class="btn btn-link text-white"><i class="fas fa-home"></i> Home Services</button>
-    <button type="button" class="btn btn-link text-white"><i class="fas fa-bicycle"></i> Delivery</button>
-    <button type="button" class="btn btn-link text-white"><i class="fas fa-couch"></i> Furniture</button>
+  <div class="row">
+    <form name="businessSearchBarForm" class="mx-auto">
+      <div class="input-group input-group-lg" id="businessSearchBarGroup">
+          <div class="input-group-prepend">
+            <span class="input-group-text text-muted font-weight-bold">Find</span>
+          </div>
+          <input
+          autocomplete="off"
+          type="text"
+          class="form-control"
+          name="categorySearchInput"
+          id="categorySearchInput"
+          aria-label="Category Search"
+          [(ngModel)]="asyncCategory"
+          [typeaheadIsFirstItemActive]="false"
+          [typeahead]="categoriesDataSource$"
+          [typeaheadAsync]="true"
+          [typeaheadMinLength]="0"
+         [typeaheadOptionField]="'description'"
+         (typeaheadOnSelect)="selectAndSearch($event, isHeroSearch)"
+         (typeaheadLoading)="changeTypeaheadLoading($event)"
+         [typeaheadItemTemplate]="resultTemplate"
+            placeholder="delivery, carryout, restaurant">
+          <div class="input-group-prepend">
+            <span class="input-group-text text-muted font-weight-bold">Near</span>
+          </div>
+          <input
+          autocomplete="off"
+          type="text"
+          class="form-control"
+          name="locationSearchInput"
+          id="locationSearchInput"
+          aria-label="Location to search"
+          [(ngModel)]="asyncLocation"
+          [typeahead]="locationsDataSource$"
+          [typeaheadAsync]="true"
+          [typeaheadMinLength]="0"
+         [typeaheadOptionField]="'description'"
+         (typeaheadOnSelect)="locationSelected($event)"
+
+         [typeaheadItemTemplate]="resultTemplate"
+         placeholder="city, state or zip">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="searchBtn" style="width: 60px;"><i class="fas fa-search"></i></button>
+          </div>
+      </div>
+      <ng-template #resultTemplate let-model="item" let-index="index">
+        <span class="mr-2" *ngIf="model.icon">
+          <i class="fas" [ngClass]="model.icon"></i>
+        </span>
+        <span>{{model.description}}</span>
+      </ng-template>
+      <!-- <ng-template #categoryResultTemplate let-model="item" let-index="index">
+        <span class="mr-2" *ngIf="model.icon">
+          <i class="fas" [ngClass]="model.icon"></i>
+        </span>
+        <span>{{model.description}}</span>
+      </ng-template> -->
+      <div id="map"></div>
+    </form>
   </div>
+  <div class="row">
+    <div class="btn-group mt-md-3 mx-auto justify-content-center" role="group" aria-label="">
+      <button type="button" class="btn btn-link text-white"><i class="fas fa-hammer"></i> Construction</button>
+      <button type="button" class="btn btn-link text-white"><i class="fas fa-utensils"></i> Restaurants</button>
+      <button type="button" class="btn btn-link text-white"><i class="fas fa-home"></i> Home Services</button>
+      <button type="button" class="btn btn-link text-white"><i class="fas fa-bicycle"></i> Delivery</button>
+      <button type="button" class="btn btn-link text-white"><i class="fas fa-couch"></i> Furniture</button>
+      <div class="btn-group" dropdown>
+        <button id="biz-search-more-btn" dropdownToggle type="button" class="btn btn-link text-white dropdown-toggle"
+          aria-controls="dropdown-basic">
+          More <i class="fas fa-ellipsis-v"></i>
+        </button>
+        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+          <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">Another action</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">Something else here</a></li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">Separated link</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
 </div>

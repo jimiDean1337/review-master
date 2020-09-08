@@ -24,6 +24,14 @@ a:hover {
   border: 2px solid $primary !important;
 }
 
+.btn-link,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link.active,
+.btn-link:active {
+  text-decoration: none !important;
+}
+
 
 /*
  * Base structure
@@ -41,4 +49,3 @@ body {
   display: flex;
   color: $black;
 }
-

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { AgmCoreModule } from '@agm/core';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -22,17 +23,19 @@ import { LocationsBarComponent } from './locations-bar/locations-bar.component';
 import { ActivityFeedComponent } from './activity-feed/activity-feed.component';
 import { HovercardComponent } from './hovercard/hovercard.component';
 import { GaClickComponent } from './directives/ga-click/ga-click.component';
-
-
-
+import { GoogleMapComponent } from './google-map/google-map.component';
+import { BizCardComponent } from './biz-card/biz-card.component';
 
 @NgModule({
-  declarations: [SuggestionsComponent, BusinessSearchComponent, SafeHtmlPipe, LocationsBarComponent, ActivityFeedComponent, HovercardComponent, GaClickComponent],
+  declarations: [SuggestionsComponent, BusinessSearchComponent, SafeHtmlPipe, LocationsBarComponent, ActivityFeedComponent, HovercardComponent, GaClickComponent, GoogleMapComponent, BizCardComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAP9hhmeOGwMrCGNjor-KvDsPdu8cj2Zz4'
+    }),
     BsDropdownModule.forRoot(),
     AlertModule.forRoot(),
     ModalModule.forRoot(),
@@ -69,6 +72,8 @@ import { GaClickComponent } from './directives/ga-click/ga-click.component';
     ActivityFeedComponent,
     HovercardComponent,
     GaClickComponent,
+    GoogleMapComponent,
+    BizCardComponent,
   ]
 })
 export class SharedModule { }
