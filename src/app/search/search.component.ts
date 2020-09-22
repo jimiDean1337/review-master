@@ -1,9 +1,9 @@
 import { LoggerService } from './../core/logger.service';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
 import { CookiesService } from '../core/services/cookies.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-// import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+// import { map, tap } from 'rxjs/operators';
 import { GooglePlacesService } from '../core/services/google-places.service';
 
 export interface MapConfig {
@@ -14,7 +14,7 @@ export interface MapConfig {
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, AfterViewInit {
   pageConfig$: Observable<any>;
   pageConfig: any;
   showMap = true;
@@ -25,18 +25,24 @@ export class SearchComponent implements OnInit {
   searchLocation: string[];
   searchAttributes: string[];
   constructor(
+    private elementRef: ElementRef,
     private router: Router,
     private route: ActivatedRoute,
     private cookie: CookiesService,
     private googlePlacesService: GooglePlacesService,
     private logger: LoggerService) { }
 
-  initPageState(placeId: string): void {
+  private initSearchParams(placeId: string): void {
     this.googlePlacesService.getAddressByPlaceId(placeId)
       .subscribe(result => {
         this.mapConfig.center.lat = result.geometry.location.lat();
         this.mapConfig.center.lng = result.geometry.location.lng();
       })
+  }
+
+  public updateFilterAttributes(attr: string) {
+    const url = location.href;
+    this.router.navigateByUrl(url, { queryParams: { attr } })
   }
 
   ngOnInit(): void {
@@ -48,11 +54,15 @@ export class SearchComponent implements OnInit {
     };
     this.route.queryParamMap
     .subscribe((params: ParamMap) => {
+    console.log("SearchComponent -> ngOnInit -> params", params)
       this.searchCategory = params.getAll('search_term');
       this.searchLocation = params.getAll('find_loc');
       this.searchAttributes = params.getAll('attrs');
-      this.initPageState(params.getAll('find_loc')[0]);
+      this.initSearchParams(params.get('find_loc'));
     });
+  }
+
+  ngAfterViewInit() {
   }
 
   naviageTo(url: string, queryParams: any) {

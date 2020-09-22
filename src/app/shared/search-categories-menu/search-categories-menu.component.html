@@ -1,0 +1,22 @@
+<div class="search-categories-menu-wrapper w-100" style="height: 40vh;">
+  <div class="container">
+    <div class="row justify-content-between align-content-start">
+      <div class="col-3 float-left mt-2 px-1" *ngFor="let item of categories">
+        <a [routerLink]="['search', {'find_desc': item.category}]" class="py-1 border-light">
+          <div class="d-flex flex-column align-items-center justify-content-center">
+            <img [src]="'assets/images/' + item.category + '.png'" width="36" [alt]="item.name">
+            <p class="text-center text-dark">{{item.name}}</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-3 mt-2 px-1">
+        <a [routerLink]="'categories'" class="py-1 border-light">
+          <div class="d-flex flex-column align-items-center justify-content-center">
+            <p class="text-center text-dark"><i class="fas fa-ellipsis-h"></i></p>
+            <p class="text-center text-dark">More</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

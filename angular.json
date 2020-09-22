@@ -22,6 +22,7 @@
               "@firebase/app",
               "firebase/app",
               "@firebase/auth",
+              "@firebase/database",
               "@firebase/storage",
               "@firebase/messaging",
               "@firebase/analytics",

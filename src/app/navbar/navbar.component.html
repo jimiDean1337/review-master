@@ -1,33 +1,41 @@
-<nav #navbar class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-  <div class="container">
-    <a class="navbar-brand" routerLink="welcome"><img src="assets/images/review-master-logo.png" width="200" alt="Review Master Logo"></a>
-    <button class="navbar-toggler hidden-lg-up" type="button" aria-controls="collapsibleNavId"
-        aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Write a Review <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Events</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Forum</a>
-        </li>
-        <!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-          <div class="dropdown-menu" aria-labelledby="dropdownId">
-            <a class="dropdown-item" href="#">Action 1</a>
-            <a class="dropdown-item" href="#">Action 2</a>
-          </div>
-        </li> -->
-      </ul>
-      <button class="btn btn-link nav-btn" (click)="navigateTo('login')">Log In</button>
-      <button class="btn btn-outline-primary nav-btn" (click)="navigateTo('signup')">Sign Up</button>
-      <form class="form-inline my-2 my-lg-0" [hidden]="navbar.clientWidth > 760">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-      </form>
-    </div>
+<div class="navbar-wrapper w-100">
+  <div *ngIf="screenWidth > 990; else mobile">
+    <nav #fullNav class="navbar navbar-dark bg-transparent py-4">
+      <div class="container">
+        <a class="navbar-brand" [routerLink]="['/']"><img src="assets/images/review-master-logo.png" width="200" alt="ReviewMaster Logo"></a>
+        <ul class="navbar-nav nav-fill mr-auto mt-2 mt-lg-0 flex-row">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Write a Review <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Forum</a>
+          </li>
+        </ul>
+        <button class="btn btn-link text-light nav-btn" (click)="navigateTo('login')">Log In</button>
+        <button class="btn btn-outline-light nav-btn px-4" (click)="navigateTo('signup')">Sign Up</button>
+      </div>
+    </nav>
   </div>
-  </nav>
+  <ng-template #mobile>
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" [routerLink]="['/']"><img src="assets/images/logo-short.png" width="40"
+            alt="Review Master Logo"></a>
+        <button class="btn-link btn ml-auto" type="button" style="outline: none;" (click)="toggleSearch()"><i class="fas fa-search fa-2x"></i></button>
+        <button class="hamburger hamburger--collapse" style="outline: none;" type="button" [ngClass]="menuIsOpen ? 'is-active': ''" (click)="toggleMenu()">
+          <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+          </span>
+        </button>
+      </div>
+    </nav>
+    <div class="search-wrapper animate__animated animate__slideInDown" *ngIf="searchIsOpen">
+      <rm-business-search [config]="{minimal: true}"></rm-business-search>
+    </div>
+
+  </ng-template>
+
+</div>

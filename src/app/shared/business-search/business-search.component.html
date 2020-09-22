@@ -1,8 +1,8 @@
-<div class="container">
+<div [ngClass]="config.minimal ? 'container-fluid':'container'" class="business-search-bar">
   <!-- <p class="lead pt-5 text-white">{{config.title}}</p> -->
-  <div class="row">
-    <form name="businessSearchBarForm" class="mx-auto">
-      <div class="input-group input-group-lg" id="businessSearchBarGroup">
+  <div class="row justify-content-center">
+    <form name="businessSearchBarForm" class="w-100">
+      <div class="input-group input-group-lg mx-auto" id="businessSearchBarGroup" [style.width]="config.minimal ? '100vw':'100%'">
           <div class="input-group-prepend">
             <span class="input-group-text text-muted font-weight-bold">Find</span>
           </div>
@@ -19,10 +19,10 @@
           [typeaheadAsync]="true"
           [typeaheadMinLength]="0"
          [typeaheadOptionField]="'description'"
-         (typeaheadOnSelect)="selectAndSearch($event, isHeroSearch)"
+         (typeaheadOnSelect)="selectAndSearch($event, !config.minimal)"
          (typeaheadLoading)="changeTypeaheadLoading($event)"
          [typeaheadItemTemplate]="resultTemplate"
-            placeholder="delivery, carryout, restaurant">
+            [placeholder]="config.minimal ? 'e.g. pizza, movers':'delivery, carryout, restaurant'">
           <div class="input-group-prepend">
             <span class="input-group-text text-muted font-weight-bold">Near</span>
           </div>
@@ -39,9 +39,8 @@
           [typeaheadMinLength]="0"
          [typeaheadOptionField]="'description'"
          (typeaheadOnSelect)="locationSelected($event)"
-
          [typeaheadItemTemplate]="resultTemplate"
-         placeholder="city, state or zip">
+         [placeholder]="'city, state or zip'">
           <div class="input-group-append">
             <button class="btn btn-primary" type="button" id="searchBtn" style="width: 60px;"><i class="fas fa-search"></i></button>
           </div>
@@ -61,7 +60,7 @@
       <div id="map"></div>
     </form>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="!config.minimal">
     <div class="btn-group mt-md-3 mx-auto justify-content-center" role="group" aria-label="">
       <button type="button" class="btn btn-link text-white"><i class="fas fa-hammer"></i> Construction</button>
       <button type="button" class="btn btn-link text-white"><i class="fas fa-utensils"></i> Restaurants</button>
@@ -84,5 +83,7 @@
       </div>
     </div>
   </div>
-
 </div>
+<!-- TODO: Modify search bar to work on header and hero -->
+<!-- TODO: Add option for categories menu display type -->
+<!-- TODO: Add biz search component  -->

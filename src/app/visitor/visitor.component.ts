@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoggerService } from '../core/logger.service';
 
 @Component({
   selector: 'rm-visitor',
@@ -8,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 export class VisitorComponent implements OnInit {
 
   suggestions: any;
-  constructor() { }
+  constructor(private logger: LoggerService) { }
 
   ngOnInit(): void {
+    this.logger.init();
     this.suggestions = [
       {
         message: 'Last review 1 month ago. Share yours?',

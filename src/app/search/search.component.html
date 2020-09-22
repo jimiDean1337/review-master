@@ -1,28 +1,35 @@
-<section #searchSection class="search-section border-top">
+<rm-navbar [displayType]="'search'"></rm-navbar>
+<section #searchSection class="search-section">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-2 p-0">
-        <div class="search-sidebar-filter" *ngIf="showFilter && searchSection.clientWidth > 760">
-          <h5 class="filter-header">Filters</h5>
-          <div class="filter-section">
-            <div class="btn-toolbar" role="toolbar" aria-label="">
-              <div class="btn-group" role="group" aria-label="">
-                <button type="button" class="btn btn-sm btn-outline-dark">$</button>
-                <button type="button" class="btn btn-sm btn-outline-dark">$$</button>
-                <button type="button" class="btn btn-sm btn-outline-dark">$$$</button>
-                <button type="button" class="btn btn-outline-dark">$$$$</button>
+      <div class="col-md-8 col-sm-12 px-0 mx-0 border-top" style="z-index: 2;">
+        <div class="container-fluid border-0 px-0 mx-0">
+          <div class="row pt-3">
+            <div class="col-3">
+              <div class="search-sidebar-filter">
+                <h5 class="filter-header text-dark">Filters</h5>
+                <div class="filter-section">
+                  <div class="btn-toolbar" role="toolbar" aria-label="">
+                    <div class="btn-group" role="group" aria-label="">
+                      <button type="button" class="btn btn-sm btn-outline-dark">$</button>
+                      <button type="button" class="btn btn-sm btn-outline-dark">$$</button>
+                      <button type="button" class="btn btn-sm btn-outline-dark">$$$</button>
+                      <button type="button" class="btn btn-outline-dark">$$$$</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-9">
+              <div class="search-results-content-wrapper">
+                <router-outlet></router-outlet>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-sm-12 p-0">
-        <div class="search-content-wrapper">
-          <router-outlet></router-outlet>
-        </div>
-      </div>
-      <div class="col-md-4 p-0">
-        <div class="search-map-wrapper" *ngIf="showMap && searchSection.clientWidth > 760">
+      <div class="col-md-4 p-0" style="z-index: 1;" *ngIf="searchSection.clientWidth > 760">
+        <div class="search-map-wrapper">
           <rm-google-map [lat]="mapConfig.center.lat" [lng]="mapConfig.center.lng" [zoom]="15" [height]="searchSection.clientHeight / 1.75 + 'px'" [width]="searchSection.clientWidth / 3 + 'px'"></rm-google-map>
         </div>
       </div>

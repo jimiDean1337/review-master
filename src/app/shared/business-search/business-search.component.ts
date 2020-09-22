@@ -27,8 +27,7 @@ export interface SelectedItem {
 })
 export class BusinessSearchComponent implements OnInit {
   @Input() config?: BusinessSearchComponentConfig = {
-    title: 'Find what you\'re looking for',
-    showIcons: true,
+    minimal: false,
   };
 
   @Input() isHeroSearch: boolean = false;
@@ -77,7 +76,7 @@ export class BusinessSearchComponent implements OnInit {
     private googlePlacesService: GooglePlacesService,
     private cookie: CookiesService) {
     // Get autocomplete location results on input
-    this.locationsDataSource$ = Observable.create((observer: any) => {
+    this.locationsDataSource$ = new Observable((observer: any) => {
       observer.next(this.asyncLocation);
     })
       .pipe(
@@ -89,7 +88,7 @@ export class BusinessSearchComponent implements OnInit {
         })
     );
     // Get autocomplete category results on input
-    this.categoriesDataSource$ = Observable.create((observer: any) => {
+    this.categoriesDataSource$ = new Observable((observer: any) => {
       observer.next(this.asyncCategory);
     })
       .pipe(
@@ -102,12 +101,7 @@ export class BusinessSearchComponent implements OnInit {
     );
     }
   private searchLocation(q: string) {
-    return this.googlePlacesService.getPlacePredictions(q)
-  }
-
-
-  setCurrentLocation() {
-
+    return this.googlePlacesService.getPlacePredictions(q);
   }
 
   searchCategory(q: string): Observable<any> {
@@ -136,7 +130,6 @@ export class BusinessSearchComponent implements OnInit {
     }
     if (isHeroSearch) {
       this.navigateTo('search', { find_desc: e.item.search_term, find_loc: this.selectedLocation.id }).then(res => {
-      console.log("BusinessSearchComponent -> selectAndNavigate -> res", res)
         this.cookie.add('previous_location', JSON.stringify(this.previousSelectedLocation));
       })
     }
@@ -214,8 +207,8 @@ export class BusinessSearchComponent implements OnInit {
         ...this.previousSelectedLocation
       }
     ];
-    const mapContainer: any = document.getElementById('map');
-    this.googlePlacesService.init(mapContainer);
+    // const mapContainer: any = document.getElementById('map');
+    this.googlePlacesService.init();
     this.location$ = this.googlePlacesService.getLocationStream();
   }
 

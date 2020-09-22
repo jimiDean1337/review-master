@@ -1,16 +1,22 @@
-<section class="jumbotron jumbotron-fluid w-100 text-center hero"
-  [style.background-image]="'url(assets/images/food_1.jpg)'" style="min-height: 600px; background-position: 0;">
-  <div class="container">
-    <!-- <h1 class="display-3"><a class="navbar-brand" href="#"><img src="assets/images/review-master-logo.png" width="300"
-        alt="Review Master Logo"></a></h1> -->
-    <div class="hero-content-wrapper" style="padding-top: 150px;">
-      <rm-business-search [isHeroSearch]="true"></rm-business-search>
+<rm-navbar></rm-navbar>
+<div class="d-none d-lg-block d-xl-block content">
+  <section class="jumbotron jumbotron-fluid w-100 text-center hero"
+    [style.background-image]="'url(assets/images/food_1.jpg)'">
+    <div class="container">
+      <div class="hero-content-wrapper" style="padding-top: 200px;">
+        <rm-business-search [config]="{minimal: false}"></rm-business-search>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<rm-suggestions [data]="suggestions"></rm-suggestions>
+  <rm-suggestions [data]="suggestions"></rm-suggestions>
+  <rm-locations-bar></rm-locations-bar>
 
-<rm-locations-bar></rm-locations-bar>
 
-<rm-activity-feed></rm-activity-feed>
+
+  <rm-activity-feed></rm-activity-feed>
+</div>
+<div class="content d-lg-none d-xl-none d-md-block d-sm-block d-xs-block">
+  <rm-search-categories-menu></rm-search-categories-menu>
+</div>
+<!-- <rm-footer></rm-footer> -->

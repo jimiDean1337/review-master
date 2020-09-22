@@ -25,11 +25,14 @@ import { HovercardComponent } from './hovercard/hovercard.component';
 import { GaClickComponent } from './directives/ga-click/ga-click.component';
 import { GoogleMapComponent } from './google-map/google-map.component';
 import { BizCardComponent } from './biz-card/biz-card.component';
+import { RouterModule } from '@angular/router';
+import { SearchCategoriesMenuComponent } from './search-categories-menu/search-categories-menu.component';
 
 @NgModule({
-  declarations: [SuggestionsComponent, BusinessSearchComponent, SafeHtmlPipe, LocationsBarComponent, ActivityFeedComponent, HovercardComponent, GaClickComponent, GoogleMapComponent, BizCardComponent],
+  declarations: [SuggestionsComponent, BusinessSearchComponent, SafeHtmlPipe, LocationsBarComponent, ActivityFeedComponent, HovercardComponent, GaClickComponent, GoogleMapComponent, BizCardComponent, SearchCategoriesMenuComponent],
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
@@ -52,6 +55,7 @@ import { BizCardComponent } from './biz-card/biz-card.component';
   ],
   exports: [
     CommonModule,
+    RouterModule,
     BsDropdownModule,
     AlertModule,
     ModalModule,
@@ -74,6 +78,7 @@ import { BizCardComponent } from './biz-card/biz-card.component';
     GaClickComponent,
     GoogleMapComponent,
     BizCardComponent,
+    SearchCategoriesMenuComponent,
   ]
 })
 export class SharedModule { }
