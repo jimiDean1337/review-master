@@ -1,21 +1,22 @@
 /* Footer */
 
-section {
-  // position: absolute;
+
+// section .section-title {
+//   text-align: center;
+//   color: $primary;
+//   margin-bottom: 50px;
+//   text-transform: uppercase;
+// }
+
+#footer {
+  position: relative;
   bottom: 0;
   width: 100vw;
   padding: 60px 0;
-}
-
-section .section-title {
-  text-align: center;
-  color: $primary;
-  margin-bottom: 50px;
-  text-transform: uppercase;
-}
-
-#footer {
   background: $primary !important;
+  @include media-breakpoint-down(md) {
+    position: absolute;
+  }
 }
 
 #footer h5 {
@@ -27,7 +28,7 @@ section .section-title {
 }
 
 #footer a {
-  color: $white;
+  color: $white !important;
   text-decoration: none !important;
   background-color: transparent;
   -webkit-text-decoration-skip: objects;

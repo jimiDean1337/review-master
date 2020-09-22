@@ -1,5 +1,5 @@
 #businessSearchBarGroup {
-  width: 960px;
+  max-width: 960px !important;
 
   input {
     // min-width: 28.4rem !important;
@@ -24,6 +24,10 @@
   .dropdown-menu {
     min-width: 450px !important;
     margin: -.125rem 0 0 -78px !important;
+    @include media-breakpoint-down(md) {
+      min-width: 1px !important;
+      width: calc(50vw - 60px) !important;
+    }
 
     button:first-of-type {
       border-radius: 0;
@@ -38,4 +42,11 @@
 
 #biz-search-more-btn.dropdown-toggle::after {
   display: none !important;
+}
+
+.business-search-bar {
+  .btn-group .btn {
+    font-size: .9rem !important;
+    font-weight: 900 !important;
+  }
 }

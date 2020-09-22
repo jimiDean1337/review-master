@@ -1,11 +1,42 @@
+.navbar {
+  font-weight: 900 !important;
+
+  .navbar-nav {
+    .nav-item {
+      margin: 0 1.5rem !important;
+
+      a {
+        color: $light !important;
+
+      }
+    }
+  }
+}
+
 .nav-btn {
   margin: 0 8px;
+  font-weight: 900 !important;
+
   &.btn-link {
     border-bottom: 2px solid transparent;
+
     &:hover {
-      border-bottom-color: $primary;
+      border-bottom-color: $light;
       text-decoration: none !important;
       border-radius: 0;
     }
   }
+
+  &.btn-outline-light {
+    border-width: 2px !important;
+  }
+}
+
+.search-wrapper {
+  position: fixed;
+  z-index: 900;
+  top: 76px;
+  width: 100vw;
+  min-height: 40vh;
+  background-color: $gray-400;
 }

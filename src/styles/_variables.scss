@@ -1,7 +1,24 @@
+// Theme style variables
+
 $primary: #ef4733;
-$secondary: #68656A;
+$secondary: #6c757d;
 $black: #131313;
-$white: #fffeef;
+$white: #fff;
+
+$theme-colors: ("primary": $primary,
+  "secondary": $secondary);
 
 $highlight-color: rgba(143, 143, 143, 0.144);
 $highlight-color-dark: rgba(143, 143, 143, 0.5);
+$link-hover-decoration: none !default;
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg: $white !default;
+$body-color: $secondary !default;
+
+$list-group-bg: transparent !important;
+$popover-bg: #343a40;
+
+$hamburger-layer-color: $primary !important;

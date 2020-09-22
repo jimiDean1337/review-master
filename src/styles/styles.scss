@@ -3,15 +3,12 @@
 
 // 3rd-party
 @import '~bootstrap/scss/bootstrap.scss';
-@import '~bootstrap/scss/variables.scss';
+@import '~hamburgers/_sass/hamburgers/hamburgers.scss';
 
 // Font and typography styles
 @import 'typography';
 
-// Custom style defaults
-@import 'defaults';
-
-// Review Master theme
+// App theme
 @import 'theme';
 
 // Styles Components
@@ -20,5 +17,5 @@
 @import 'signup';
 @import 'business-search-bar';
 @import 'search';
+@import 'search-categories-menu';
 @import 'footer';
-
