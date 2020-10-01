@@ -137,6 +137,7 @@ export class GooglePlacesService {
     return new Observable((obs: any) => {
       this.currentLocationStream$.subscribe(coords => {
         this.getAddressByLatLng(coords.latitude, coords.longitude).subscribe(location => {
+        console.log("location", location)
           obs.next(location);
           this.addLogEntry({ message,description,location})
         })
@@ -146,6 +147,7 @@ export class GooglePlacesService {
 
   /**Retrieve an Observable of users geolocation data */
   public getLocationStream(): Observable<UserGeolocation> {
+    let currentCity: string;
     return this.getNavigatorGeolocation()
       .pipe(
         map(coords => {
@@ -159,11 +161,13 @@ export class GooglePlacesService {
               return new Observable((obs: any) => {
                 this.getAddressByLatLng(coords.latitude, coords.longitude)
                   .subscribe(local => {
+                    currentCity = local.address_components[2].short_name;
                   console.log("local", local)
                     obs.next(local)
                   })
               })
-            }
+            },
+            currentCity
           };
           this.addLogEntry(
             {

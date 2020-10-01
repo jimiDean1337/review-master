@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { mergeMap, map } from 'rxjs/operators';
+import { mergeMap, map, tap } from 'rxjs/operators';
 // import { TypeaheadConfig } from 'ngx-bootstrap/typeahead';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { CookiesService } from '../../core/services/cookies.service';
@@ -32,7 +32,9 @@ export class BusinessSearchComponent implements OnInit {
 
   @Input() isHeroSearch: boolean = false;
 
-  @Output() newSearchCriteraSet: EventEmitter<any> = new EventEmitter(true);
+  @Output() newSearchCriteriaSet: EventEmitter<any> = new EventEmitter(true);
+  @Output() locationSet: EventEmitter<any> = new EventEmitter(true);
+  @Output() categorySet: EventEmitter<any> = new EventEmitter(true);
 
   location$: Observable<UserGeolocation>;
   asyncLocation: string;
@@ -62,6 +64,7 @@ export class BusinessSearchComponent implements OnInit {
     types: [],
     value: '',
     id: '',
+    city: ''
   };
   selectedCategory: SelectedItem = {
     description: '',
@@ -76,8 +79,8 @@ export class BusinessSearchComponent implements OnInit {
     private googlePlacesService: GooglePlacesService,
     private cookie: CookiesService) {
     // Get autocomplete location results on input
-    this.locationsDataSource$ = new Observable((observer: any) => {
-      observer.next(this.asyncLocation);
+    this.locationsDataSource$ = new Observable((obs: any) => {
+      obs.next(this.asyncLocation);
     })
       .pipe(
         mergeMap((token: string) => {
@@ -88,8 +91,8 @@ export class BusinessSearchComponent implements OnInit {
         })
     );
     // Get autocomplete category results on input
-    this.categoriesDataSource$ = new Observable((observer: any) => {
-      observer.next(this.asyncCategory);
+    this.categoriesDataSource$ = new Observable((obs: any) => {
+      obs.next(this.asyncCategory);
     })
       .pipe(
         mergeMap((token: string) => {
@@ -108,6 +111,7 @@ export class BusinessSearchComponent implements OnInit {
       const query = new RegExp(q, 'i');
       return of(
         this.allCategories.filter((key: any) => {
+          this.categorySet.emit(query.test(key.description))
           return query.test(key.description);
         })
         );
@@ -125,11 +129,12 @@ export class BusinessSearchComponent implements OnInit {
   selectAndSearch(e: TypeaheadMatch, isHeroSearch = false) {
     console.log("BusinessSearchComponent -> selectAndNavigate -> e", e)
     this.selectedCategory = e.item;
+    this.categorySet.emit(e.item)
     if (!this.selectedLocation.description) {
       this.selectedLocation = this.previousSelectedLocation;
     }
     if (isHeroSearch) {
-      this.navigateTo('search', { find_desc: e.item.search_term, find_loc: this.selectedLocation.id }).then(res => {
+      this.navigateTo('search', { find_desc: e.item.search_term, find_loc: this.selectedLocation.id }).then(() => {
         this.cookie.add('previous_location', JSON.stringify(this.previousSelectedLocation));
       })
     }
@@ -154,19 +159,22 @@ export class BusinessSearchComponent implements OnInit {
           this.previousSelectedLocation.types = ['previous_selection', ...local.types];
           this.previousSelectedLocation.id = local.place_id;
           this.previousSelectedLocation.description = local.formatted_address;
+          this.selectedLocation.city = local.address_components[2].short_name;
           locationData = {
             place_id: local.place_id,
             formatted_address: local.formatted_address,
             userGeolocation: results,
             types: local.types
           }
+          this.locationSet.emit(local.address_components[2].short_name);
+
           // this.cookie.add('previous_location', JSON.stringify(this.previousSelectedLocation));
         })
       } else {
         this.selectedLocation.value = value;
         this.selectedLocation.description = value;
         this.selectedLocation.id = e.item.place_id;
-        this.selectedLocation.types = e.item.types;
+      this.selectedLocation.types = e.item.types;
         this.previousSelectedLocation.value = value;
         this.previousSelectedLocation.description = value;
         this.previousSelectedLocation.id = e.item.place_id;
@@ -178,12 +186,10 @@ export class BusinessSearchComponent implements OnInit {
           types: e.item.types
         }
         // this.cookie.add('previous_location', JSON.stringify(this.previousSelectedLocation));
+        this.locationSet.emit(e.item.value);
       }
       this.googlePlacesService.setTargetLocationData(locationData);
     })
-      // TODO: create object props of selected location data
-    // TODO: selectedLocation props: place_id, formatted_address, types, current user location
-    // TODO: previouslySelectedLocation props: place_id, formatted_address, types
   }
 
 

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'rm-locations-bar',
@@ -7,13 +7,22 @@ import { Observable } from 'rxjs';
   styleUrls: ['./locations-bar.component.scss']
 })
 export class LocationsBarComponent implements OnInit {
-  currentCity$: Observable<any>;
-  constructor() { }
+  city$: Subject<string>;
+  @Input()
+  get city(): string { return this._city; }
+  set city(city: string) {
+    console.log("LocationsBarComponent -> setcity -> city", city)
+    this._city = city;
+    this.city$.next(city);
+  }
+  private _city = '';
+
+  constructor() {
+    this.city$ = new Subject();
+  }
 
   ngOnInit(): void {
-    this.currentCity$ = new Observable((obs: any) => {
-      obs.next('Newark')
-    })
+
   }
 
 }

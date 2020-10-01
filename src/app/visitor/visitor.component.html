@@ -4,13 +4,13 @@
     [style.background-image]="'url(assets/images/food_1.jpg)'">
     <div class="container">
       <div class="hero-content-wrapper" style="padding-top: 200px;">
-        <rm-business-search [config]="{minimal: false}"></rm-business-search>
+        <rm-business-search #bizSearch [config]="{minimal: false}" (locationSet)="setLocation($event)" (categorySet)="setCategory($event)"></rm-business-search>
       </div>
     </div>
   </section>
 
   <rm-suggestions [data]="suggestions"></rm-suggestions>
-  <rm-locations-bar></rm-locations-bar>
+  <rm-locations-bar [city]="currentCity$ | async"></rm-locations-bar>
 
 
 
